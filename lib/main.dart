@@ -64,6 +64,11 @@ class _RootShellState extends State<RootShell> {
   List<ProductDetails> _products = [];
   int _tabIndex = 0;
 
+  /// Créé une seule fois, avec la bonne page initiale, dès que les profils
+  /// sont résolus (voir build()) — permet le swipe entre onglets en plus des
+  /// taps sur la barre du bas.
+  PageController? _pageController;
+
   DriverProfile get _activeProfile =>
       _profiles!.firstWhere((p) => p.id == _activeProfileId, orElse: () => _profiles!.first);
 
@@ -82,6 +87,7 @@ class _RootShellState extends State<RootShell> {
   @override
   void dispose() {
     _purchaseSubscription?.cancel();
+    _pageController?.dispose();
     super.dispose();
   }
 
@@ -189,6 +195,7 @@ class _RootShellState extends State<RootShell> {
       _activeProfileId = saved.id;
       _tabIndex = 0;
     });
+    _pageController?.animateToPage(0, duration: _tabAnimDuration, curve: _tabAnimCurve);
     _storage.saveDriverProfiles(_profiles!);
     _storage.saveActiveProfileId(_activeProfileId);
   }
@@ -245,14 +252,36 @@ class _RootShellState extends State<RootShell> {
       _history = history;
       _tabIndex = _activeProfile.isConfigured ? 0 : 1;
     });
+    _pageController?.animateToPage(_tabIndex, duration: _tabAnimDuration, curve: _tabAnimCurve);
     _storage.saveDriverProfiles(profiles);
     _storage.saveActiveProfileId(_activeProfileId);
     _storage.saveRideHistory(history);
   }
 
+  static const _tabAnimDuration = Duration(milliseconds: 250);
+  static const _tabAnimCurve = Curves.easeOut;
+
+  /// Tap sur la barre du bas — anime le PageView vers l'onglet choisi.
   void _onTabTap(int index) {
     if (index == 0 && !_activeProfile.isConfigured) {
-      setState(() => _tabIndex = 1);
+      _goToTab(1);
+      return;
+    }
+    _goToTab(index);
+  }
+
+  void _goToTab(int index) {
+    setState(() => _tabIndex = index);
+    _pageController?.animateToPage(index, duration: _tabAnimDuration, curve: _tabAnimCurve);
+  }
+
+  /// Swipe horizontal sur le PageView — CLAUDE.md n'impose pas ce geste,
+  /// ajouté en confort d'usage en plus des taps sur la barre du bas.
+  void _onPageChanged(int index) {
+    if (index == 0 && !_activeProfile.isConfigured) {
+      // Le profil doit être configuré avant d'accéder au calcul : on ne
+      // laisse pas le swipe atterrir sur Course, on renvoie vers Réglages.
+      _goToTab(1);
       return;
     }
     setState(() => _tabIndex = index);
@@ -266,6 +295,8 @@ class _RootShellState extends State<RootShell> {
         body: Center(child: CircularProgressIndicator(color: AppColors.amber)),
       );
     }
+
+    _pageController ??= PageController(initialPage: _tabIndex);
 
     // Contrainte de largeur type smartphone : sans effet sur un vrai appareil
     // mobile (toujours plus étroit que 480), mais évite que l'app s'étire sur
@@ -282,8 +313,12 @@ class _RootShellState extends State<RootShell> {
                 Expanded(
                   child: SafeArea(
                     bottom: false,
-                    child: IndexedStack(
-                      index: _tabIndex,
+                    // PageView plutôt qu'IndexedStack : permet de glisser
+                    // d'un onglet à l'autre en plus de taper sur la barre du
+                    // bas (qui reste, elle, toujours cliquable).
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: _onPageChanged,
                       children: [
                         HomeScreen(
                           profile: _activeProfile,

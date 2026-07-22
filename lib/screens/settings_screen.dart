@@ -51,7 +51,7 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAliveClientMixin {
   late TextEditingController _vehicleNameController;
   late TextEditingController _consumptionController;
   late TextEditingController _fuelPriceController;
@@ -59,6 +59,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late bool _isElectric;
   late String _editingProfileId;
   late final TextEditingController _thresholdController;
+
+  // Voir HomeScreen : évite que PageView reconstruise cet écran (et perde
+  // les champs en cours d'édition) à chaque glissement d'onglet.
+  @override
+  bool get wantKeepAlive => true;
 
   DriverProfile get _activeProfile =>
       widget.profiles.firstWhere((p) => p.id == widget.activeProfileId);
@@ -129,6 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView(
       padding: const EdgeInsets.only(bottom: 12),
       children: [

@@ -32,8 +32,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
   static const _calculator = CalculatorService();
+
+  // Garde les champs saisis (et le résultat affiché) intacts quand on
+  // glisse vers un autre onglet puis qu'on revient — sans ça, PageView
+  // reconstruit l'écran de zéro à chaque retour, contrairement à
+  // l'IndexedStack utilisé avant.
+  @override
+  bool get wantKeepAlive => true;
 
   final _rideKmController = TextEditingController();
   final _clientPriceController = TextEditingController();
@@ -91,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         Expanded(child: _buildForm(context)),

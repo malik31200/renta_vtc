@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _clientPriceController = TextEditingController();
   final _platformPayoutController = TextEditingController();
   final _durationController = TextEditingController();
+  final _scrollController = ScrollController();
 
   RideResult? _result;
   String? _selectedPlatform;
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _clientPriceController.dispose();
     _platformPayoutController.dispose();
     _durationController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -76,6 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
     _platformPayoutController.clear();
     _durationController.clear();
     setState(() => _selectedPlatform = null);
+
+    // Remonte vers le Readout pour que le résultat soit visible
+    // immédiatement, même si l'utilisateur avait scrollé en bas pour saisir
+    // les champs — sinon rien ne semble s'être passé.
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -93,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildForm(BuildContext context) {
     return ListView(
+      controller: _scrollController,
       padding: const EdgeInsets.only(bottom: 12),
       children: [
         AppTopBar(

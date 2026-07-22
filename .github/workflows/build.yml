@@ -1,0 +1,61 @@
+name: Build
+
+# CLAUDE.md §9.4 : deux jobs (build_android, build_ios) déclenchés sur push
+# vers main, chacun exécutant pub get → analyze → test → build. Les
+# artefacts de build sont joints au run ; aucune publication automatisée
+# sur les stores (validation manuelle recommandée pour un MVP).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build_android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renta-vtc-android
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  build_ios:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      # Pas de compte développeur Apple en CI : build non signé, juste pour
+      # vérifier que ça compile. La signature/publication reste manuelle
+      # (§9.3).
+      - run: flutter build ios --release --no-codesign
+
+      - name: Archive unsigned .app
+        run: |
+          cd build/ios/iphoneos
+          zip -r Runner.app.zip Runner.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renta-vtc-ios-unsigned
+          path: build/ios/iphoneos/Runner.app.zip

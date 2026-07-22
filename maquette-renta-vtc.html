@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renta VTC — Maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#111318;
+    --surface:#1B1E24;
+    --surface-alt:#242830;
+    --divider:#31363F;
+    --amber:#F2A93B;
+    --green:#6FCF97;
+    --red:#E8735A;
+    --text-primary:#F4F4F0;
+    --text-muted:#8B909A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:#0A0B0D;
+    font-family:'Inter',sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:40px 20px;
+    gap:32px;
+    flex-wrap:wrap;
+  }
+  .phone{
+    width:390px;
+    background:var(--bg);
+    border-radius:40px;
+    padding:14px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.6);
+    border:1px solid #23262c;
+  }
+  .screen{
+    background:var(--bg);
+    border-radius:28px;
+    overflow:hidden;
+    min-height:760px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .statusbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 22px 4px;
+    font-size:13px; color:var(--text-muted); font-weight:500;
+  }
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 20px 6px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand-mark{
+    width:26px; height:26px; border-radius:7px;
+    background:linear-gradient(135deg, var(--amber), #C97A1D);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace; font-weight:700; font-size:13px; color:#141414;
+  }
+  .brand-name{ font-weight:700; font-size:15px; letter-spacing:-0.2px; }
+  .vehicle-chip{
+    display:flex; align-items:center; gap:6px;
+    background:var(--surface);
+    border:1px solid var(--divider);
+    padding:6px 12px 6px 8px;
+    border-radius:100px;
+    font-size:12px;
+    color:var(--text-muted);
+  }
+  .vehicle-chip span.dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;}
+
+  /* --- Signature readout : taximeter --- */
+  .readout{
+    margin:18px 20px 8px;
+    background:radial-gradient(ellipse at top, #191C22 0%, #101215 100%);
+    border:1px solid var(--divider);
+    border-radius:20px;
+    padding:26px 24px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .readout::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity:0.6;
+  }
+  .readout-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:1.6px;
+    color:var(--text-muted); font-weight:600; margin-bottom:10px;
+  }
+  .readout-value{
+    font-family:'Space Mono',monospace;
+    font-size:52px; font-weight:700;
+    color:var(--green);
+    letter-spacing:-1px;
+    line-height:1;
+    display:flex; align-items:baseline; gap:6px;
+    text-shadow:0 0 24px rgba(111,207,151,0.25);
+  }
+  .readout-value .unit{ font-size:20px; color:var(--text-muted); font-weight:400; }
+  .readout-sub{
+    margin-top:14px;
+    display:flex; gap:18px;
+    border-top:1px solid var(--divider);
+    padding-top:12px;
+  }
+  .readout-sub .item{ font-size:11px; color:var(--text-muted); }
+  .readout-sub .item b{ display:block; font-family:'Space Mono',monospace; color:var(--text-primary); font-size:13px; margin-top:2px; font-weight:400;}
+
+  /* --- Form --- */
+  .section-title{
+    font-size:11px; text-transform:uppercase; letter-spacing:1.4px;
+    color:var(--text-muted); font-weight:700;
+    margin:22px 20px 10px;
+  }
+  .form{
+    margin:0 20px;
+    background:var(--surface);
+    border-radius:18px;
+    border:1px solid var(--divider);
+    overflow:hidden;
+  }
+  .field{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid var(--divider);
+  }
+  .field:last-child{border-bottom:none;}
+  .field-label{
+    display:flex; align-items:center; gap:10px;
+    font-size:14px; font-weight:500; color:var(--text-primary);
+  }
+  .field-icon{
+    width:30px; height:30px; border-radius:9px;
+    background:var(--surface-alt);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px;
+  }
+  .field-input{
+    display:flex; align-items:center; gap:4px;
+  }
+  .field-input input{
+    background:transparent; border:none; outline:none;
+    font-family:'Space Mono',monospace; font-size:16px; color:var(--amber);
+    text-align:right; width:70px; font-weight:700;
+  }
+  .field-input .suffix{ font-size:13px; color:var(--text-muted); }
+
+  .cta{
+    margin:22px 20px 10px;
+    background:var(--amber);
+    color:#161616;
+    border:none;
+    border-radius:16px;
+    padding:17px;
+    font-size:15px;
+    font-weight:700;
+    text-align:center;
+    letter-spacing:0.2px;
+    box-shadow:0 8px 20px rgba(242,169,59,0.25);
+  }
+
+  .tabbar{
+    margin-top:auto;
+    display:flex; justify-content:space-around;
+    padding:14px 10px 20px;
+    border-top:1px solid var(--divider);
+  }
+  .tab{ text-align:center; font-size:10px; color:var(--text-muted); font-weight:600; }
+  .tab.active{ color:var(--amber); }
+  .tab-icon{ font-size:18px; margin-bottom:3px; }
+
+  /* Settings screen tweaks */
+  .field-sub{ font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(111,207,151,0.12);
+    color:var(--green);
+    font-size:11px; font-weight:600;
+    padding:5px 10px; border-radius:100px;
+    margin:16px 20px 0;
+    width:fit-content;
+  }
+  h1.label{
+    font-size:12px; color:var(--text-muted); text-align:center; margin-top:14px; font-weight:600; letter-spacing:0.4px;
+  }
+</style>
+</head>
+<body>
+
+<div>
+<h1 class="label">1 · CALCUL D'UNE COURSE</h1>
+<div class="phone">
+  <div class="screen">
+    <div class="statusbar"><span>9:41</span><span>●●●●</span></div>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div class="brand-name">Renta VTC</div>
+      </div>
+      <div class="vehicle-chip"><span class="dot"></span>Clio V · Diesel</div>
+    </div>
+
+    <div class="readout">
+      <div class="readout-label">Net estimé pour cette course</div>
+      <div class="readout-value">12,24<span class="unit">€</span></div>
+      <div class="readout-sub">
+        <div class="item">Carburant<b>−1,08 €</b></div>
+        <div class="item">URSSAF 21,2 %<b>−4,68 €</b></div>
+        <div class="item">Commission<b>−4,08 € (18,5 %)</b></div>
+      </div>
+    </div>
+
+    <div class="section-title">Détails de la course</div>
+    <div class="form">
+      <div class="field">
+        <div class="field-label"><div class="field-icon">🚗</div>Course</div>
+        <div class="field-input"><input type="text" value="4,7"><span class="suffix">km</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><div class="field-icon">🧾</div>Prix client</div>
+        <div class="field-input"><input type="text" value="22,08"><span class="suffix">€</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><div class="field-icon">💶</div>Versé plateforme</div>
+        <div class="field-input"><input type="text" value="18,00"><span class="suffix">€</span></div>
+      </div>
+    </div>
+
+    <div class="cta">Calculer le net</div>
+
+    <div class="tabbar">
+      <div class="tab active"><div class="tab-icon">🧮</div>Course</div>
+      <div class="tab"><div class="tab-icon">⚙️</div>Réglages</div>
+      <div class="tab"><div class="tab-icon">📊</div>Historique</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div>
+<h1 class="label">2 · RÉGLAGES (SAISIS UNE FOIS)</h1>
+<div class="phone">
+  <div class="screen">
+    <div class="statusbar"><span>9:41</span><span>●●●●</span></div>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div class="brand-name">Mon profil</div>
+      </div>
+    </div>
+
+    <div class="status-pill"><span>●</span>Enregistré localement, sur cet appareil</div>
+
+    <div class="section-title">Véhicule</div>
+    <div class="form">
+      <div class="field">
+        <div class="field-label"><div class="field-icon">🚘</div>
+          <div>Modèle<div class="field-sub">Nom libre, informatif</div></div>
+        </div>
+        <div class="field-input"><input type="text" value="Clio V" style="width:90px; color:var(--text-primary);"></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><div class="field-icon">⛽</div>Consommation</div>
+        <div class="field-input"><input type="text" value="5,2"><span class="suffix">L/100km</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><div class="field-icon">💰</div>Prix carburant</div>
+        <div class="field-input"><input type="text" value="1,78"><span class="suffix">€/L</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">Statut fiscal</div>
+    <div class="form">
+      <div class="field">
+        <div class="field-label"><div class="field-icon">📄</div>
+          <div>Auto-entrepreneur<div class="field-sub">Cotisations URSSAF VTC</div></div>
+        </div>
+        <div class="field-input"><input type="text" value="21,2" style="width:50px;"><span class="suffix">%</span></div>
+      </div>
+    </div>
+
+    <div class="cta">Enregistrer le profil</div>
+
+    <div class="tabbar">
+      <div class="tab"><div class="tab-icon">🧮</div>Course</div>
+      <div class="tab active"><div class="tab-icon">⚙️</div>Réglages</div>
+      <div class="tab"><div class="tab-icon">📊</div>Historique</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

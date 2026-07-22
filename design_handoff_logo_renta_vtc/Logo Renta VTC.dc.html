@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<style>
+body{margin:0;background:#f0eee9;font-family:Helvetica,Arial,sans-serif}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{max-width:100%;background:#131315;border:1px solid rgba(255,255,255,.06);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.15);overflow:hidden;padding:36px 32px 28px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}
+.lockup{display:flex;align-items:center;gap:14px}
+.wordmark{font:800 26px/1 Helvetica,Arial,sans-serif;letter-spacing:-.3px;white-space:nowrap}
+.wordmark b{color:#fff;font-weight:800}
+.wordmark span{color:#F2A33D;font-weight:800}
+.tagline{font:600 10px/1 Helvetica,Arial,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:-14px}
+.appicon-row{display:flex;align-items:center;gap:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);width:100%}
+.appicon-label{font:500 11px/1.3 Helvetica,Arial,sans-serif;color:rgba(255,255,255,.35)}
+</style>
+</helmet>
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Affiner <a class="dv-oid" href="#1a">1a</a>, combiner <a class="dv-oid" href="#1b">1b</a>+<a class="dv-oid" href="#1d">1d</a>, fond clair de <a class="dv-oid" href="#1c">1c</a></span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Monogramme affiné</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:18px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)">
+<span style="font:800 30px/1 Helvetica,Arial,sans-serif;color:#131315;letter-spacing:-.5px">R</span>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:13px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)">
+<span style="font:800 22px/1 Helvetica,Arial,sans-serif;color:#131315;letter-spacing:-.5px">R</span>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Voiture à roues-volant</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:#1c1d20;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:50px;height:50px;border-radius:50%;border:2.5px solid #F2A33D;display:flex;align-items:center;justify-content:center">
+<div style="position:relative;width:32px;height:15px">
+<div style="position:absolute;top:0;left:10px;width:11px;height:5px;background:#F2A33D;border-radius:2px 2px 0 0"></div>
+<div style="position:absolute;top:3.5px;left:0;width:32px;height:7px;background:#F2A33D;border-radius:2px 2px 1px 1px"></div>
+<div style="position:absolute;bottom:-3px;left:4px;width:7px;height:7px;border-radius:50%;background:#d8d8d8"></div>
+<div style="position:absolute;bottom:-3px;right:4px;width:7px;height:7px;border-radius:50%;background:#d8d8d8"></div>
+</div>
+</div>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:12px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:36px;height:36px;border-radius:50%;border:2px solid #1c1d20;display:flex;align-items:center;justify-content:center">
+<div style="position:relative;width:22px;height:11px">
+<div style="position:absolute;top:0;left:7px;width:8px;height:3.5px;background:#1c1d20;border-radius:2px 2px 0 0"></div>
+<div style="position:absolute;top:2.5px;left:0;width:22px;height:5px;background:#1c1d20;border-radius:2px 2px 1px 1px"></div>
+<div style="position:absolute;bottom:-2px;left:3px;width:5px;height:5px;border-radius:50%;background:#d8d8d8"></div>
+<div style="position:absolute;bottom:-2px;right:3px;width:5px;height:5px;border-radius:50%;background:#d8d8d8"></div>
+</div>
+</div>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Pin — fond clair</div>
+<div class="dv-card" style="width:320px;background:#f5f1ea;border-color:rgba(0,0,0,.08)">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:rgba(0,0,0,.04);display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:#F2A33D;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center">
+<div style="width:11px;height:11px;border-radius:50%;background:#f5f1ea;transform:rotate(45deg)"></div>
+</div>
+</div>
+<div class="wordmark"><b style="color:#131315">Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row" style="border-top-color:rgba(0,0,0,.08)">
+<div style="width:44px;height:44px;border-radius:12px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:22px;height:22px;border-radius:50% 50% 50% 0;background:#f5f1ea;transform:rotate(-45deg)"></div>
+</div>
+<div class="appicon-label" style="color:rgba(0,0,0,.4)">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Essaie: "garde <a class="dv-oid" href="#2a">2a</a> comme logo final" · "<a class="dv-oid" href="#2b">2b</a> avec roues plus grandes" · "décline <a class="dv-oid" href="#2c">2c</a> en version app store"</p>
+</section>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Pistes de logo — Renta VTC</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Monogramme R</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<span style="font:800 30px/1 Helvetica,Arial,sans-serif;color:#131315">R</span>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:12px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<span style="font:800 22px/1 Helvetica,Arial,sans-serif;color:#131315">R</span>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Volant</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:#1c1d20;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:38px;height:38px;border-radius:50%;border:4px solid #F2A33D;position:relative;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;width:3px;height:44px;background:#F2A33D;transform:rotate(0deg)"></div>
+<div style="position:absolute;width:3px;height:44px;background:#F2A33D;transform:rotate(60deg)"></div>
+<div style="position:absolute;width:3px;height:44px;background:#F2A33D;transform:rotate(120deg)"></div>
+<div style="width:12px;height:12px;border-radius:50%;background:#1c1d20;border:3px solid #F2A33D;position:relative;z-index:1"></div>
+</div>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:12px;background:#1c1d20;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:28px;height:28px;border-radius:50%;border:3px solid #F2A33D;position:relative;display:flex;align-items:center;justify-content:center">
+<div style="width:8px;height:8px;border-radius:50%;background:#F2A33D"></div>
+</div>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Pin de trajet</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:#1c1d20;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:#F2A33D;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center">
+<div style="width:11px;height:11px;border-radius:50%;background:#1c1d20;transform:rotate(45deg)"></div>
+</div>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:12px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="width:22px;height:22px;border-radius:50% 50% 50% 0;background:#1c1d20;transform:rotate(-45deg)"></div>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Voiture minimaliste</div>
+<div class="dv-card" style="width:320px">
+<div class="lockup">
+<div style="width:60px;height:60px;border-radius:16px;background:#1c1d20;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="position:relative;width:48px;height:22px">
+<div style="position:absolute;top:0;left:14px;width:16px;height:7px;background:#F2A33D;border-radius:3px 3px 0 0"></div>
+<div style="position:absolute;top:5px;left:0;width:48px;height:10px;background:#F2A33D;border-radius:3px 3px 1px 1px"></div>
+<div style="position:absolute;bottom:-4px;left:7px;width:10px;height:10px;border-radius:50%;background:#d8d8d8"></div>
+<div style="position:absolute;bottom:-4px;right:7px;width:10px;height:10px;border-radius:50%;background:#d8d8d8"></div>
+</div>
+</div>
+<div class="wordmark"><b>Renta</b> <span>VTC</span></div>
+</div>
+<div class="appicon-row">
+<div style="width:44px;height:44px;border-radius:12px;background:#F2A33D;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="position:relative;width:28px;height:13px">
+<div style="position:absolute;top:0;left:8px;width:10px;height:4px;background:#1c1d20;border-radius:2px 2px 0 0"></div>
+<div style="position:absolute;top:3px;left:0;width:28px;height:6px;background:#1c1d20;border-radius:2px 2px 1px 1px"></div>
+<div style="position:absolute;bottom:-2.5px;left:4px;width:6px;height:6px;border-radius:50%;background:#d8d8d8"></div>
+<div style="position:absolute;bottom:-2.5px;right:4px;width:6px;height:6px;border-radius:50%;background:#d8d8d8"></div>
+</div>
+</div>
+<div class="appicon-label">Icône app / favicon</div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Essaie: "affine <a class="dv-oid" href="#1a">1a</a>" · "combine le volant de <a class="dv-oid" href="#1b">1b</a> avec la voiture de <a class="dv-oid" href="#1d">1d</a>" · "version fond clair de <a class="dv-oid" href="#1c">1c</a>"</p>
+</section>
+
+</x-dc>
+</body>
+</html>

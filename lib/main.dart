@@ -1,0 +1,335 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+
+import 'models/driver_profile.dart';
+import 'models/ride_entry.dart';
+import 'models/subscription_status.dart';
+import 'screens/history_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/paywall_screen.dart';
+import 'screens/settings_screen.dart';
+import 'services/ads_service.dart';
+import 'services/notification_service.dart';
+import 'services/stats_service.dart';
+import 'services/storage_service.dart';
+import 'services/subscription_service.dart';
+import 'theme/app_theme.dart';
+import 'widgets/app_tab_bar.dart';
+
+void main() {
+  runApp(const RentaVtcApp());
+}
+
+class RentaVtcApp extends StatelessWidget {
+  const RentaVtcApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Renta VTC',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark,
+      home: const RootShell(),
+    );
+  }
+}
+
+/// Coquille racine : charge les profils véhicule (multi-véhicules, §10.2.d),
+/// l'historique, le statut d'abonnement (§10.3) et le plafond
+/// auto-entrepreneur (§10.2.f) au démarrage ; redirige automatiquement vers
+/// les réglages tant que le profil actif n'est pas configuré — CLAUDE.md §7.1.
+class RootShell extends StatefulWidget {
+  const RootShell({super.key});
+
+  @override
+  State<RootShell> createState() => _RootShellState();
+}
+
+class _RootShellState extends State<RootShell> {
+  static const _storage = StorageService();
+  static const _stats = StatsService();
+  final _subscriptionService = SubscriptionService();
+  final _notificationService = NotificationService();
+  final _adsService = AdsService();
+
+  StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
+
+  List<DriverProfile>? _profiles;
+  String _activeProfileId = '';
+  List<RideEntry> _history = [];
+  double _annualThreshold = kDefaultAnnualCapThreshold;
+  SubscriptionStatus _subscriptionStatus = const SubscriptionStatus.free();
+  List<ProductDetails> _products = [];
+  int _tabIndex = 0;
+
+  DriverProfile get _activeProfile =>
+      _profiles!.firstWhere((p) => p.id == _activeProfileId, orElse: () => _profiles!.first);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialData();
+    _purchaseSubscription = _subscriptionService.purchaseStream.listen(_onPurchaseUpdates);
+    _notificationService.init();
+    _adsService.init();
+    _subscriptionService.queryProducts().then((products) {
+      if (mounted) setState(() => _products = products);
+    });
+  }
+
+  @override
+  void dispose() {
+    _purchaseSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadInitialData() async {
+    final profiles = await _storage.loadDriverProfiles();
+    final activeId = await _storage.loadActiveProfileId();
+    final history = await _storage.loadRideHistory();
+    final threshold = await _storage.loadAnnualThreshold();
+    final subscriptionStatus = await _storage.loadSubscriptionStatus();
+    if (!mounted) return;
+
+    final resolvedProfiles = profiles.isEmpty ? [const DriverProfile.empty()] : profiles;
+    final resolvedActiveId = resolvedProfiles.any((p) => p.id == activeId)
+        ? activeId!
+        : resolvedProfiles.first.id;
+    final resolvedActiveProfile =
+        resolvedProfiles.firstWhere((p) => p.id == resolvedActiveId);
+
+    setState(() {
+      _profiles = resolvedProfiles;
+      _activeProfileId = resolvedActiveId;
+      _history = history;
+      _annualThreshold = threshold;
+      _subscriptionStatus = subscriptionStatus;
+      _tabIndex = resolvedActiveProfile.isConfigured ? 0 : 1;
+    });
+
+    _subscriptionService.restorePurchases();
+    _maybeAlertThreshold();
+  }
+
+  Future<void> _maybeAlertThreshold() async {
+    final currentAmount = _stats.totalClientPriceInYear(_history, DateTime.now().year);
+    if (_annualThreshold <= 0 || currentAmount / _annualThreshold < 0.8) return;
+
+    final lastAlertDate = await _storage.loadLastThresholdAlertDate();
+    final today = DateTime.now();
+    if (lastAlertDate != null &&
+        lastAlertDate.year == today.year &&
+        lastAlertDate.month == today.month &&
+        lastAlertDate.day == today.day) {
+      return;
+    }
+
+    await _notificationService.showThresholdAlert(
+      currentAmount: currentAmount,
+      threshold: _annualThreshold,
+    );
+    await _storage.saveLastThresholdAlertDate(today);
+  }
+
+  void _onPurchaseUpdates(List<PurchaseDetails> purchases) {
+    for (final purchase in purchases) {
+      if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
+        final status = _subscriptionService.statusFromPurchase(purchase);
+        setState(() => _subscriptionStatus = status);
+        _storage.saveSubscriptionStatus(status);
+      }
+      if (purchase.pendingCompletePurchase) {
+        _subscriptionService.completePurchase(purchase);
+      }
+    }
+  }
+
+  void _onSubscribe(ProductDetails product) {
+    _subscriptionService.buy(product);
+  }
+
+  void _onRestorePurchases() {
+    _subscriptionService.restorePurchases();
+  }
+
+  void _onTogglePremiumDevMode(bool value) {
+    final status = SubscriptionStatus(isPremium: value);
+    setState(() => _subscriptionStatus = status);
+    _storage.saveSubscriptionStatus(status);
+  }
+
+  void _onThresholdChanged(double value) {
+    setState(() => _annualThreshold = value);
+    _storage.saveAnnualThreshold(value);
+  }
+
+  void _onProfileSaved(DriverProfile profile) {
+    final saved = profile.id.isEmpty
+        ? DriverProfile(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            vehicleName: profile.vehicleName,
+            consumptionL100km: profile.consumptionL100km,
+            fuelPricePerLiter: profile.fuelPricePerLiter,
+            urssafRate: profile.urssafRate,
+            isElectric: profile.isElectric,
+          )
+        : profile;
+
+    setState(() {
+      final profiles = [..._profiles!];
+      final index = profiles.indexWhere((p) => p.id == saved.id);
+      if (index == -1) {
+        profiles.add(saved);
+      } else {
+        profiles[index] = saved;
+      }
+      _profiles = profiles;
+      _activeProfileId = saved.id;
+      _tabIndex = 0;
+    });
+    _storage.saveDriverProfiles(_profiles!);
+    _storage.saveActiveProfileId(_activeProfileId);
+  }
+
+  void _onSelectProfile(String id) {
+    setState(() => _activeProfileId = id);
+    _storage.saveActiveProfileId(id);
+  }
+
+  void _onAddProfile() {
+    final blank = DriverProfile(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      vehicleName: '',
+      consumptionL100km: 0,
+      fuelPricePerLiter: 0,
+      urssafRate: kDefaultUrssafRate,
+    );
+    setState(() {
+      _profiles = [..._profiles!, blank];
+      _activeProfileId = blank.id;
+    });
+    _storage.saveDriverProfiles(_profiles!);
+    _storage.saveActiveProfileId(_activeProfileId);
+  }
+
+  void _onDeleteProfile(String id) {
+    if (_profiles!.length <= 1) return;
+    setState(() {
+      final profiles = _profiles!.where((p) => p.id != id).toList();
+      _profiles = profiles;
+      if (_activeProfileId == id) {
+        _activeProfileId = profiles.first.id;
+      }
+    });
+    _storage.saveDriverProfiles(_profiles!);
+    _storage.saveActiveProfileId(_activeProfileId);
+  }
+
+  void _onRideCalculated(RideEntry entry) {
+    setState(() => _history = [..._history, entry]);
+    _storage.saveRideHistory(_history);
+    _maybeAlertThreshold();
+  }
+
+  void _onDeleteRideEntry(RideEntry entry) {
+    setState(() => _history = _history.where((e) => e.id != entry.id).toList());
+    _storage.saveRideHistory(_history);
+  }
+
+  void _onRestoreBackup(List<DriverProfile> profiles, List<RideEntry> history) {
+    setState(() {
+      _profiles = profiles;
+      _activeProfileId = profiles.first.id;
+      _history = history;
+      _tabIndex = _activeProfile.isConfigured ? 0 : 1;
+    });
+    _storage.saveDriverProfiles(profiles);
+    _storage.saveActiveProfileId(_activeProfileId);
+    _storage.saveRideHistory(history);
+  }
+
+  void _onTabTap(int index) {
+    if (index == 0 && !_activeProfile.isConfigured) {
+      setState(() => _tabIndex = 1);
+      return;
+    }
+    setState(() => _tabIndex = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final profiles = _profiles;
+    if (profiles == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: AppColors.amber)),
+      );
+    }
+
+    // Contrainte de largeur type smartphone : sans effet sur un vrai appareil
+    // mobile (toujours plus étroit que 480), mais évite que l'app s'étire sur
+    // toute la largeur d'un écran de bureau (aperçu web uniquement).
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0B0D),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: ColoredBox(
+            color: AppColors.bg,
+            child: Column(
+              children: [
+                Expanded(
+                  child: SafeArea(
+                    bottom: false,
+                    child: IndexedStack(
+                      index: _tabIndex,
+                      children: [
+                        HomeScreen(
+                          profile: _activeProfile,
+                          onOpenSettings: () => _onTabTap(1),
+                          onRideCalculated: _onRideCalculated,
+                          isPremium: _subscriptionStatus.isActive,
+                        ),
+                        SettingsScreen(
+                          profiles: profiles,
+                          activeProfileId: _activeProfileId,
+                          onSaved: _onProfileSaved,
+                          onSelectProfile: _onSelectProfile,
+                          onAddProfile: _onAddProfile,
+                          onDeleteProfile: _onDeleteProfile,
+                          annualThreshold: _annualThreshold,
+                          onThresholdChanged: _onThresholdChanged,
+                          isPremium: _subscriptionStatus.isActive,
+                          onTogglePremiumDevMode: _onTogglePremiumDevMode,
+                          rideHistory: _history,
+                          onRestoreBackup: _onRestoreBackup,
+                        ),
+                        _subscriptionStatus.isActive
+                            ? HistoryScreen(
+                                entries: _history,
+                                onDelete: _onDeleteRideEntry,
+                                annualThreshold: _annualThreshold,
+                              )
+                            : PaywallScreen(
+                                products: _products,
+                                isSupported: _subscriptionService.isSupportedOnThisPlatform,
+                                onSubscribe: _onSubscribe,
+                                onRestore: _onRestorePurchases,
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+                SafeArea(
+                  top: false,
+                  child: AppTabBar(currentIndex: _tabIndex, onTap: _onTabTap),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

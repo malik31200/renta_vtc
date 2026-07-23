@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -68,11 +69,14 @@ class PaywallScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.amber.withValues(alpha: 0.4)),
               ),
-              child: const Text(
-                'Les achats in-app ne sont pas disponibles sur cet aperçu web — '
-                'uniquement sur l\'app Android/iOS publiée. Un mode test est disponible '
-                'dans Réglages en attendant.',
-                style: TextStyle(fontSize: 12, color: AppColors.amber),
+              child: Text(
+                kDebugMode
+                    ? 'Les achats in-app ne sont pas disponibles sur cet aperçu web — '
+                        'uniquement sur l\'app Android/iOS publiée. Un mode test est disponible '
+                        'dans Réglages en attendant.'
+                    : 'Les achats in-app ne sont pas disponibles sur cet aperçu — '
+                        'uniquement sur l\'app Android/iOS publiée.',
+                style: const TextStyle(fontSize: 12, color: AppColors.amber),
               ),
             ),
           )

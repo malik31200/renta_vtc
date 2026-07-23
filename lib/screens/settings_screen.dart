@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 import '../models/driver_profile.dart';
@@ -246,16 +247,20 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
           history: widget.rideHistory,
           onRestore: widget.onRestoreBackup,
         ),
-        const SectionTitle('Abonnement'),
-        FormCard(children: [
-          ToggleField(
-            icon: Icons.workspace_premium_outlined,
-            label: 'Premium (mode test)',
-            sublabel: 'Bascule locale — remplace le vrai achat in-app, indisponible sur cet aperçu web',
-            value: widget.isPremium,
-            onChanged: widget.onTogglePremiumDevMode,
-          ),
-        ]),
+        // Bascule dev-only : ne doit jamais atteindre un build release, elle
+        // contournerait l'abonnement payant pour n'importe quel utilisateur.
+        if (kDebugMode) ...[
+          const SectionTitle('Abonnement'),
+          FormCard(children: [
+            ToggleField(
+              icon: Icons.workspace_premium_outlined,
+              label: 'Premium (mode test)',
+              sublabel: 'Bascule locale — remplace le vrai achat in-app, indisponible sur cet aperçu web',
+              value: widget.isPremium,
+              onChanged: widget.onTogglePremiumDevMode,
+            ),
+          ]),
+        ],
       ],
     );
   }

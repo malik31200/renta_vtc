@@ -98,6 +98,13 @@ class ReadoutCard extends StatelessWidget {
               ),
             ),
           ],
+          const SizedBox(height: 14),
+          const Text(
+            'Estimation basée sur tes réglages (consommation moyenne, taux '
+            'URSSAF) — pas un document officiel, vérifie ton relevé de '
+            'plateforme.',
+            style: TextStyle(fontSize: 10.5, color: AppColors.textMuted, height: 1.4),
+          ),
         ],
       ),
     );

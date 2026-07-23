@@ -1,0 +1,307 @@
+<title>Conditions d'utilisation — Renta VTC</title>
+<style>
+  :root {
+    --bg: #111318;
+    --surface: #1b1e24;
+    --surface-alt: #242830;
+    --divider: #31363f;
+    --amber: #f2a93b;
+    --green: #6fcf97;
+    --text-primary: #f4f4f0;
+    --text-muted: #8b909a;
+    --font-sans: -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Space Mono", "Cascadia Mono", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    padding: 56px 20px 96px;
+    display: flex;
+    justify-content: center;
+  }
+
+  main {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #1c1d20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .brand {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  .updated {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 28px;
+  }
+
+  .summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: color-mix(in srgb, var(--amber) 14%, transparent);
+    color: var(--amber);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 100px;
+    margin-bottom: 36px;
+  }
+
+  .summary-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex: none;
+  }
+
+  section {
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+  }
+
+  section p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    margin: 0 0 14px;
+    max-width: 62ch;
+  }
+
+  section p:last-child { margin-bottom: 0; }
+
+  section ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+  }
+
+  section li {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+
+  .card + .card { margin-top: 10px; }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 32px 0;
+  }
+
+  a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+  }
+  a:hover { border-bottom-color: var(--amber); }
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--surface-alt);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  footer {
+    margin-top: 48px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 420px) {
+    h1 { font-size: 24px; }
+    body { padding: 40px 16px 72px; }
+  }
+</style>
+
+<main>
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#F2A93B" stroke-width="3">
+          <line x1="30" y1="8" x2="30" y2="52"></line>
+          <line x1="30" y1="8" x2="30" y2="52" transform="rotate(60 30 30)"></line>
+          <line x1="30" y1="8" x2="30" y2="52" transform="rotate(120 30 30)"></line>
+        </g>
+        <circle cx="30" cy="30" r="21" fill="none" stroke="#F2A93B" stroke-width="4"></circle>
+        <circle cx="30" cy="30" r="7.5" fill="none" stroke="#F2A93B" stroke-width="3"></circle>
+        <circle cx="30" cy="30" r="6" fill="#1c1d20"></circle>
+      </svg>
+    </div>
+    <span class="brand">Renta VTC</span>
+  </header>
+
+  <h1>Conditions d'utilisation</h1>
+  <p class="updated">Dernière mise à jour&nbsp;: 23 juillet 2026</p>
+
+  <div class="summary-pill">
+    <span class="dot" aria-hidden="true"></span>
+    Un outil d'estimation, pas un document fiscal officiel
+  </div>
+
+  <section>
+    <p>
+      En utilisant Renta VTC, tu acceptes les conditions décrites ci-dessous. Elles
+      complètent la
+      <a href="https://claude.ai/code/artifact/af3d0798-756d-4bd4-8a64-90f54c71b7fe">politique
+      de confidentialité</a> — celle-ci porte sur tes données, celle-ci porte sur l'usage
+      du calcul lui-même.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <section>
+    <p class="eyebrow">Ce que fait l'application</p>
+    <p>
+      Renta VTC t'aide à estimer, course par course, ce qu'il te reste réellement une
+      fois déduits le carburant et les cotisations URSSAF — à partir des informations que
+      <strong>tu saisis toi-même</strong>&nbsp;: consommation moyenne du véhicule, prix du
+      carburant, taux URSSAF, prix de la course.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Précision des calculs</p>
+    <p>
+      Les montants affichés sont des <strong>estimations</strong>, pas des valeurs
+      garanties exactes. Plusieurs facteurs peuvent créer un écart avec la réalité&nbsp;:
+    </p>
+    <ul>
+      <li>
+        La consommation de carburant saisie est une moyenne — la consommation réelle
+        varie selon le trafic, la conduite, la météo ou la charge du véhicule.
+      </li>
+      <li>
+        Le taux URSSAF et le plafond auto-entrepreneur pré-remplis correspondent à des
+        valeurs connues à un instant donné et évoluent dans le temps — ils restent
+        modifiables dans les réglages, à toi de les tenir à jour.
+      </li>
+      <li>
+        Une erreur de saisie (prix, distance, montant versé) se répercute directement sur
+        le résultat affiché.
+      </li>
+    </ul>
+    <p>
+      Ces résultats sont donnés à titre indicatif pour t'aider à évaluer la rentabilité
+      d'une course. Ils ne remplacent ni un relevé officiel de plateforme, ni les conseils
+      d'un expert-comptable, ni tes propres déclarations fiscales réelles.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Ta responsabilité</p>
+    <p>
+      Tu restes seul responsable de l'exactitude des informations que tu déclares à
+      l'URSSAF et de la bonne tenue de ta comptabilité d'auto-entrepreneur. L'export
+      CSV/JSON proposé par l'application sert à comparer et consolider tes propres
+      saisies — il ne se substitue pas au relevé officiel fourni par Uber, Bolt ou toute
+      autre plateforme, qui reste la référence en cas de contrôle.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Abonnement Premium</p>
+    <p>
+      L'abonnement Premium (historique, statistiques, export, multi-véhicules...) est
+      géré entièrement via Google Play ou l'App Store. Le renouvellement, la résiliation
+      et le remboursement suivent les règles habituelles de ces plateformes — Renta VTC
+      n'a pas la main dessus et ne peut pas les modifier de son côté.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Modifications de ces conditions</p>
+    <p>
+      Si ces conditions évoluent, la date de mise à jour en haut de page sera modifiée en
+      conséquence.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Contact</p>
+    <p>
+      Une question sur ces conditions ou sur l'application&nbsp;? Écris à
+      <a href="mailto:yka-vtc@outlook.fr">yka-vtc@outlook.fr</a>.
+    </p>
+  </section>
+
+  <footer>
+    Renta VTC — application développée en France, sans compte ni backend.
+  </footer>
+</main>

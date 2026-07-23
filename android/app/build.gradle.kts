@@ -8,8 +8,9 @@ plugins {
 }
 
 // Clé de release réelle (CLAUDE.md §9.2) — jamais commitée (voir
-// android/.gitignore). Absente sur la CI GitHub Actions par conception : le
-// build release y retombe automatiquement sur la clé de debug plus bas.
+// android/.gitignore). Écrite par la CI GitHub Actions à partir de secrets
+// pour le job build_android_release_aab ; absente sinon, auquel cas le
+// build release retombe automatiquement sur la clé de debug plus bas.
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
 val hasReleaseKeystore = keystorePropertiesFile.exists()
@@ -44,7 +45,9 @@ android {
     signingConfigs {
         if (hasReleaseKeystore) {
             create("release") {
-                storeFile = file(keystoreProperties["storeFile"] as String)
+                // rootProject.file, pas file() : storeFile est relatif à
+                // android/ (où vit key.properties), pas à android/app/.
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String

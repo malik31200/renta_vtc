@@ -1,0 +1,319 @@
+<title>Politique de confidentialité — Renta VTC</title>
+<style>
+  :root {
+    --bg: #111318;
+    --surface: #1b1e24;
+    --surface-alt: #242830;
+    --divider: #31363f;
+    --amber: #f2a93b;
+    --green: #6fcf97;
+    --text-primary: #f4f4f0;
+    --text-muted: #8b909a;
+    --font-sans: -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Space Mono", "Cascadia Mono", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    padding: 56px 20px 96px;
+    display: flex;
+    justify-content: center;
+  }
+
+  main {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #1c1d20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .brand {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  .updated {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 28px;
+  }
+
+  .summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: color-mix(in srgb, var(--green) 12%, transparent);
+    color: var(--green);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 100px;
+    margin-bottom: 36px;
+  }
+
+  .summary-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    flex: none;
+  }
+
+  section {
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+  }
+
+  section p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    margin: 0 0 14px;
+    max-width: 62ch;
+  }
+
+  section p:last-child { margin-bottom: 0; }
+
+  section ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+  }
+
+  section li {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+
+  .card + .card { margin-top: 10px; }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 32px 0;
+  }
+
+  a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+  }
+  a:hover { border-bottom-color: var(--amber); }
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--surface-alt);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  footer {
+    margin-top: 48px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+
+  /* Le produit lui-même est délibérément mono-thème (tableau de bord sombre,
+     CLAUDE.md §6) — cette page suit le même parti pris plutôt que de
+     proposer un thème clair non prévu par l'identité du produit. */
+
+  @media (max-width: 420px) {
+    h1 { font-size: 24px; }
+    body { padding: 40px 16px 72px; }
+  }
+</style>
+
+<main>
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#F2A93B" stroke-width="3">
+          <line x1="30" y1="8" x2="30" y2="52"></line>
+          <line x1="30" y1="8" x2="30" y2="52" transform="rotate(60 30 30)"></line>
+          <line x1="30" y1="8" x2="30" y2="52" transform="rotate(120 30 30)"></line>
+        </g>
+        <circle cx="30" cy="30" r="21" fill="none" stroke="#F2A93B" stroke-width="4"></circle>
+        <circle cx="30" cy="30" r="7.5" fill="none" stroke="#F2A93B" stroke-width="3"></circle>
+        <circle cx="30" cy="30" r="6" fill="#1c1d20"></circle>
+      </svg>
+    </div>
+    <span class="brand">Renta VTC</span>
+  </header>
+
+  <h1>Politique de confidentialité</h1>
+  <p class="updated">Dernière mise à jour&nbsp;: 23 juillet 2026</p>
+
+  <div class="summary-pill">
+    <span class="dot" aria-hidden="true"></span>
+    Aucune donnée relative à ton activité n'est collectée ni transmise
+  </div>
+
+  <section>
+    <p>
+      Renta VTC est une application destinée aux chauffeurs VTC (Uber, Bolt, Heetch...)
+      sous statut auto-entrepreneur. Elle calcule, course par course, ce qu'il reste
+      réellement au chauffeur une fois déduits le carburant et les cotisations URSSAF.
+    </p>
+    <p>
+      Cette politique explique simplement ce que l'application fait — et surtout ne fait
+      pas — avec tes informations.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <section>
+    <p class="eyebrow">Tes données métier</p>
+    <p>
+      L'application fonctionne <strong>100&nbsp;% hors-ligne</strong>. Il n'y a ni compte
+      utilisateur, ni serveur, ni base de données distante. Les informations suivantes
+      restent uniquement stockées sur ton appareil, et n'en sortent jamais&nbsp;:
+    </p>
+    <ul>
+      <li>Ton ou tes profils véhicule (modèle, consommation, prix du carburant)</li>
+      <li>Ton taux et plafond URSSAF</li>
+      <li>L'historique de tes courses, si tu es abonné Premium</li>
+    </ul>
+    <p>
+      Désinstaller l'application supprime définitivement ces données. Tu peux aussi les
+      exporter toi-même à tout moment (Réglages → Sauvegarde) sous forme d'un fichier
+      que tu choisis où envoyer — jamais transmis automatiquement où que ce soit.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Services tiers utilisés</p>
+    <p>
+      Deux services externes interviennent, tous deux gérés directement par Google ou
+      Apple — nous n'avons à aucun moment accès à ce qu'ils traitent.
+    </p>
+
+    <div class="card">
+      <p class="card-title">Google AdMob</p>
+      <p class="card-desc">
+        Affiche une bannière publicitaire fixe en bas de l'écran de calcul, uniquement
+        pour les utilisateurs non abonnés Premium — jamais de publicité plein écran.
+        AdMob peut utiliser un identifiant publicitaire à des fins de ciblage. Le
+        consentement est demandé via le Google User Messaging Platform, conformément au
+        RGPD.
+      </p>
+    </div>
+    <div class="card">
+      <p class="card-title">Achats intégrés (Google Play Billing / Apple StoreKit)</p>
+      <p class="card-desc">
+        Traite le paiement de l'abonnement Premium. Tes informations de paiement
+        (carte bancaire, etc.) sont gérées entièrement par Google ou Apple — nous ne les
+        voyons ni ne les stockons.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Notifications</p>
+    <p>
+      Une alerte locale peut te prévenir lorsque ton chiffre d'affaires annuel approche
+      le plafond auto-entrepreneur. Cette notification est calculée et affichée
+      entièrement sur ton appareil — aucune donnée n'est envoyée à un serveur pour la
+      générer.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Mineurs</p>
+    <p>
+      Renta VTC s'adresse aux chauffeurs professionnels et n'est pas destinée aux
+      personnes de moins de 16&nbsp;ans.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Modifications de cette politique</p>
+    <p>
+      Si cette politique évolue, la date de mise à jour en haut de page sera modifiée en
+      conséquence. Aucun changement ne réduira les garanties déjà en place sans t'en
+      informer clairement dans l'application.
+    </p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Contact</p>
+    <p>
+      Une question sur cette politique ou sur l'application&nbsp;? Écris à
+      <a href="mailto:yka-vtc@outlook.fr">yka-vtc@outlook.fr</a>.
+    </p>
+  </section>
+
+  <footer>
+    Renta VTC — application développée en France, sans compte ni backend.
+  </footer>
+</main>

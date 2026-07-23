@@ -24,10 +24,9 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<!-- App ID de test AdMob officiel Google — CLAUDE.md §10.5. À remplacer
-	     par le véritable App ID AdMob avant publication. -->
+	<!-- App ID du vrai compte AdMob — CLAUDE.md §10.5. -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-3858509501102713~3019419690</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

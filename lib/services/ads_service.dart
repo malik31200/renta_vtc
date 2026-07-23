@@ -7,10 +7,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 /// Non disponible sur le web (le plugin ne le supporte pas) : dégradation
 /// silencieuse sur cette plateforme, comme pour `in_app_purchase`.
 class AdsService {
-  /// IDs de test officiels Google — à remplacer par les vrais IDs AdMob de
-  /// production avant publication sur les stores (CLAUDE.md §10.5.a).
-  static const String androidBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
-  static const String iosBannerAdUnitId = 'ca-app-pub-3940256099942544/2934735716';
+  /// IDs de bloc d'annonces bannière du vrai compte AdMob (CLAUDE.md
+  /// §10.5.a).
+  static const String androidBannerAdUnitId = 'ca-app-pub-3858509501102713/2364813577';
+  static const String iosBannerAdUnitId = 'ca-app-pub-3858509501102713/8838988518';
 
   static String get bannerAdUnitId =>
       defaultTargetPlatform == TargetPlatform.iOS ? iosBannerAdUnitId : androidBannerAdUnitId;

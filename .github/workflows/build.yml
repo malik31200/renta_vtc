@@ -1,9 +1,15 @@
 name: Build
 
-# CLAUDE.md §9.4 : deux jobs (build_android, build_ios) déclenchés sur push
-# vers main, chacun exécutant pub get → analyze → test → build. Les
-# artefacts de build sont joints au run ; aucune publication automatisée
-# sur les stores (validation manuelle recommandée pour un MVP).
+# CLAUDE.md §9.4 : jobs build_android et build_ios déclenchés sur push vers
+# main, chacun exécutant pub get → analyze → test → build. Les artefacts de
+# build sont joints au run ; aucune publication automatisée sur les stores
+# (validation manuelle recommandée pour un MVP).
+#
+# build_android_release_aab produit en plus un .aab signé avec la vraie clé
+# de release (secrets ANDROID_KEYSTORE_BASE64/ANDROID_KEYSTORE_PASSWORD/
+# ANDROID_KEY_ALIAS/ANDROID_KEY_PASSWORD), prêt à être uploadé sur Play
+# Console — uniquement sur push (pas sur les PR, qui n'ont pas accès aux
+# secrets pour les forks externes).
 
 on:
   push:
@@ -31,6 +37,38 @@ jobs:
         with:
           name: renta-vtc-android
           path: build/app/outputs/flutter-apk/app-release.apk
+
+  build_android_release_aab:
+    name: Build Android Release AAB (signed, for Play Store)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - name: Decode release keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/renta-vtc-release.jks
+
+      - name: Write key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=renta-vtc-release.jks
+          EOF
+
+      - run: flutter build appbundle --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renta-vtc-release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
 
   build_ios:
     name: Build iOS

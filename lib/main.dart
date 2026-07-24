@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'models/driver_profile.dart';
+import 'models/fixed_expense.dart';
+import 'models/fuel_entry.dart';
 import 'models/ride_entry.dart';
 import 'models/subscription_status.dart';
 import 'screens/history_screen.dart';
@@ -59,6 +61,8 @@ class _RootShellState extends State<RootShell> {
   List<DriverProfile>? _profiles;
   String _activeProfileId = '';
   List<RideEntry> _history = [];
+  List<FixedExpense> _fixedExpenses = [];
+  List<FuelEntry> _fuelEntries = [];
   double _annualThreshold = kDefaultAnnualCapThreshold;
   SubscriptionStatus _subscriptionStatus = const SubscriptionStatus.free();
   List<ProductDetails> _products = [];
@@ -95,6 +99,8 @@ class _RootShellState extends State<RootShell> {
     final profiles = await _storage.loadDriverProfiles();
     final activeId = await _storage.loadActiveProfileId();
     final history = await _storage.loadRideHistory();
+    final fixedExpenses = await _storage.loadFixedExpenses();
+    final fuelEntries = await _storage.loadFuelEntries();
     final threshold = await _storage.loadAnnualThreshold();
     final subscriptionStatus = await _storage.loadSubscriptionStatus();
     if (!mounted) return;
@@ -110,6 +116,8 @@ class _RootShellState extends State<RootShell> {
       _profiles = resolvedProfiles;
       _activeProfileId = resolvedActiveId;
       _history = history;
+      _fixedExpenses = fixedExpenses;
+      _fuelEntries = fuelEntries;
       _annualThreshold = threshold;
       _subscriptionStatus = subscriptionStatus;
       _tabIndex = resolvedActiveProfile.isConfigured ? 0 : 1;
@@ -245,6 +253,26 @@ class _RootShellState extends State<RootShell> {
     _storage.saveRideHistory(_history);
   }
 
+  void _onAddFixedExpense(FixedExpense expense) {
+    setState(() => _fixedExpenses = [..._fixedExpenses, expense]);
+    _storage.saveFixedExpenses(_fixedExpenses);
+  }
+
+  void _onDeleteFixedExpense(FixedExpense expense) {
+    setState(() => _fixedExpenses = _fixedExpenses.where((e) => e.id != expense.id).toList());
+    _storage.saveFixedExpenses(_fixedExpenses);
+  }
+
+  void _onAddFuelEntry(FuelEntry entry) {
+    setState(() => _fuelEntries = [..._fuelEntries, entry]);
+    _storage.saveFuelEntries(_fuelEntries);
+  }
+
+  void _onDeleteFuelEntry(FuelEntry entry) {
+    setState(() => _fuelEntries = _fuelEntries.where((e) => e.id != entry.id).toList());
+    _storage.saveFuelEntries(_fuelEntries);
+  }
+
   void _onRestoreBackup(List<DriverProfile> profiles, List<RideEntry> history) {
     setState(() {
       _profiles = profiles;
@@ -345,6 +373,13 @@ class _RootShellState extends State<RootShell> {
                                 entries: _history,
                                 onDelete: _onDeleteRideEntry,
                                 annualThreshold: _annualThreshold,
+                                fixedExpenses: _fixedExpenses,
+                                fuelEntries: _fuelEntries,
+                                isElectric: _activeProfile.isElectric,
+                                onAddFixedExpense: _onAddFixedExpense,
+                                onDeleteFixedExpense: _onDeleteFixedExpense,
+                                onAddFuelEntry: _onAddFuelEntry,
+                                onDeleteFuelEntry: _onDeleteFuelEntry,
                               )
                             : PaywallScreen(
                                 products: _products,

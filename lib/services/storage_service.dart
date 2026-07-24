@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/driver_profile.dart';
+import '../models/fixed_expense.dart';
+import '../models/fuel_entry.dart';
 import '../models/ride_entry.dart';
 import '../models/subscription_status.dart';
 
@@ -27,6 +29,8 @@ class StorageService {
   static const _annualThresholdKey = 'annual_cap_threshold';
   static const _lastThresholdAlertDateKey = 'last_threshold_alert_date';
   static const _subscriptionStatusKey = 'subscription_status';
+  static const _fixedExpensesKey = 'fixed_expenses';
+  static const _fuelEntriesKey = 'fuel_entries';
 
   Future<List<DriverProfile>> loadDriverProfiles() async {
     final prefs = await SharedPreferences.getInstance();
@@ -123,5 +127,37 @@ class StorageService {
   Future<void> saveSubscriptionStatus(SubscriptionStatus status) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_subscriptionStatusKey, jsonEncode(status.toJson()));
+  }
+
+  Future<List<FixedExpense>> loadFixedExpenses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_fixedExpensesKey) ?? const [];
+    return raw
+        .map((e) => FixedExpense.fromJson(jsonDecode(e) as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> saveFixedExpenses(List<FixedExpense> expenses) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+      _fixedExpensesKey,
+      expenses.map((e) => jsonEncode(e.toJson())).toList(),
+    );
+  }
+
+  Future<List<FuelEntry>> loadFuelEntries() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_fuelEntriesKey) ?? const [];
+    return raw
+        .map((e) => FuelEntry.fromJson(jsonDecode(e) as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> saveFuelEntries(List<FuelEntry> entries) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+      _fuelEntriesKey,
+      entries.map((e) => jsonEncode(e.toJson())).toList(),
+    );
   }
 }

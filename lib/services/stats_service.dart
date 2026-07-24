@@ -1,3 +1,5 @@
+import '../models/fixed_expense.dart';
+import '../models/fuel_entry.dart';
 import '../models/ride_entry.dart';
 
 /// Statistiques calculées à la volée à partir de l'historique — CLAUDE.md
@@ -82,6 +84,69 @@ class StatsService {
     stats.sort((a, b) => b.averageNet.compareTo(a.averageNet));
     return stats;
   }
+
+  /// Net réel du mois : remplace le carburant théorique par course (basé
+  /// uniquement sur la distance course, cf. §5.1) par la dépense carburant
+  /// réellement saisie, et déduit les charges fixes — fonctionnalité
+  /// Premium demandée par un chauffeur testeur.
+  ///
+  /// Garde-fou : tant qu'aucun plein n'est saisi pour le mois, le carburant
+  /// théorique reste utilisé tel quel (comme dans le net par course actuel)
+  /// plutôt que d'être traité comme 0€ — sinon un oubli de saisie gonflerait
+  /// artificiellement le "net réel" affiché.
+  RealMonthlyNet realNetForMonth(
+    List<RideEntry> entries,
+    List<FixedExpense> fixedExpenses,
+    List<FuelEntry> fuelEntries,
+    DateTime reference,
+  ) {
+    final monthEntries = entries.where(
+      (e) => e.date.year == reference.year && e.date.month == reference.month,
+    );
+    final theoreticalNet = monthEntries.fold<double>(0, (sum, e) => sum + e.result.net);
+    final fuelTheoretical = monthEntries.fold<double>(0, (sum, e) => sum + e.result.fuelCost);
+
+    final monthFuelEntries = fuelEntries.where(
+      (e) => e.date.year == reference.year && e.date.month == reference.month,
+    );
+    final hasFuelEntries = monthFuelEntries.isNotEmpty;
+    final realFuel = monthFuelEntries.fold<double>(0, (sum, e) => sum + e.amount);
+
+    final fixedCharges = fixedExpenses.fold<double>(0, (sum, e) => sum + e.amountPerMonth);
+
+    final realNet = hasFuelEntries
+        ? (theoreticalNet + fuelTheoretical) - realFuel - fixedCharges
+        : theoreticalNet - fixedCharges;
+
+    return RealMonthlyNet(
+      theoreticalNet: theoreticalNet,
+      fuelTheoretical: fuelTheoretical,
+      realFuel: realFuel,
+      hasFuelEntries: hasFuelEntries,
+      fixedCharges: fixedCharges,
+      realNet: realNet,
+    );
+  }
+}
+
+/// Détail du calcul du net réel d'un mois — voir
+/// [StatsService.realNetForMonth].
+class RealMonthlyNet {
+  final double theoreticalNet;
+  final double fuelTheoretical;
+  final double realFuel;
+  final bool hasFuelEntries;
+  final double fixedCharges;
+  final double realNet;
+
+  const RealMonthlyNet({
+    required this.theoreticalNet,
+    required this.fuelTheoretical,
+    required this.realFuel,
+    required this.hasFuelEntries,
+    required this.fixedCharges,
+    required this.realNet,
+  });
 }
 
 /// Net moyen et cumulé d'une plateforme sur l'historique disponible —

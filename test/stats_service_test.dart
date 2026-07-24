@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:renta_vtc/models/fixed_expense.dart';
+import 'package:renta_vtc/models/fuel_entry.dart';
 import 'package:renta_vtc/models/ride_entry.dart';
 import 'package:renta_vtc/models/ride_result.dart';
 import 'package:renta_vtc/services/stats_service.dart';
@@ -133,6 +135,73 @@ void main() {
       final entries = [_entry(id: '1', date: DateTime(2026, 1, 1), platformName: null)];
       final result = stats.byPlatform(entries);
       expect(result.single.label, 'Sans plateforme');
+    });
+  });
+
+  group('realNetForMonth', () {
+    // Chaque _entry() par défaut a net=12 et fuelCost=1 (voir le helper).
+    final reference = DateTime(2026, 1, 15);
+
+    test('aucun plein saisi : garde le carburant théorique, déduit juste les charges fixes', () {
+      final entries = [
+        _entry(id: '1', date: DateTime(2026, 1, 5)),
+        _entry(id: '2', date: DateTime(2026, 1, 20)),
+      ];
+      final fixedExpenses = [
+        const FixedExpense(id: 'a', label: 'Assurance', amountPerMonth: 5),
+      ];
+
+      final result = stats.realNetForMonth(entries, fixedExpenses, const [], reference);
+
+      expect(result.hasFuelEntries, false);
+      expect(result.theoreticalNet, closeTo(24, 0.001));
+      expect(result.fixedCharges, closeTo(5, 0.001));
+      // Pas de swap carburant théorique -> réel : seul le fixe est déduit.
+      expect(result.realNet, closeTo(19, 0.001));
+    });
+
+    test('au moins un plein saisi : remplace le carburant théorique par la dépense réelle', () {
+      final entries = [
+        _entry(id: '1', date: DateTime(2026, 1, 5)),
+        _entry(id: '2', date: DateTime(2026, 1, 20)),
+      ];
+      final fixedExpenses = [
+        const FixedExpense(id: 'a', label: 'Assurance', amountPerMonth: 5),
+      ];
+      final fuelEntries = [
+        FuelEntry(id: 'f1', date: DateTime(2026, 1, 10), amount: 30),
+      ];
+
+      final result = stats.realNetForMonth(entries, fixedExpenses, fuelEntries, reference);
+
+      expect(result.hasFuelEntries, true);
+      expect(result.theoreticalNet, closeTo(24, 0.001));
+      expect(result.fuelTheoretical, closeTo(2, 0.001));
+      expect(result.realFuel, closeTo(30, 0.001));
+      // (24 + 2) - 30 - 5 = -9
+      expect(result.realNet, closeTo(-9, 0.001));
+    });
+
+    test('ignore les courses et les pleins en dehors du mois demandé', () {
+      final entries = [
+        _entry(id: '1', date: DateTime(2026, 1, 5)),
+        _entry(id: '2', date: DateTime(2026, 2, 5)),
+      ];
+      final fuelEntries = [
+        FuelEntry(id: 'f1', date: DateTime(2026, 1, 10), amount: 30),
+        FuelEntry(id: 'f2', date: DateTime(2026, 2, 10), amount: 999),
+      ];
+
+      final result = stats.realNetForMonth(entries, const [], fuelEntries, reference);
+
+      expect(result.theoreticalNet, closeTo(12, 0.001));
+      expect(result.realFuel, closeTo(30, 0.001));
+    });
+
+    test('sans charges ni pleins, le net réel égale le net théorique (comportement inchangé)', () {
+      final entries = [_entry(id: '1', date: DateTime(2026, 1, 5))];
+      final result = stats.realNetForMonth(entries, const [], const [], reference);
+      expect(result.realNet, closeTo(result.theoreticalNet, 0.001));
     });
   });
 }

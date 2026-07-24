@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../models/fixed_expense.dart';
+import '../models/fuel_entry.dart';
 import '../models/ride_entry.dart';
 import '../services/stats_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/date_formatting.dart';
 import '../utils/number_parsing.dart';
 import '../widgets/app_top_bar.dart';
+import '../widgets/charges_section.dart';
 import '../widgets/export_section.dart';
 import '../widgets/platform_comparison.dart';
 import '../widgets/section_title.dart';
@@ -17,12 +20,26 @@ class HistoryScreen extends StatelessWidget {
   final List<RideEntry> entries;
   final ValueChanged<RideEntry> onDelete;
   final double annualThreshold;
+  final List<FixedExpense> fixedExpenses;
+  final List<FuelEntry> fuelEntries;
+  final bool isElectric;
+  final ValueChanged<FixedExpense> onAddFixedExpense;
+  final ValueChanged<FixedExpense> onDeleteFixedExpense;
+  final ValueChanged<FuelEntry> onAddFuelEntry;
+  final ValueChanged<FuelEntry> onDeleteFuelEntry;
 
   const HistoryScreen({
     super.key,
     required this.entries,
     required this.onDelete,
     required this.annualThreshold,
+    required this.fixedExpenses,
+    required this.fuelEntries,
+    required this.isElectric,
+    required this.onAddFixedExpense,
+    required this.onDeleteFixedExpense,
+    required this.onAddFuelEntry,
+    required this.onDeleteFuelEntry,
   });
 
   @override
@@ -50,6 +67,17 @@ class HistoryScreen extends StatelessWidget {
                         child: PlatformComparison(entries: entries),
                       ),
                     ],
+                    const SectionTitle('Charges du mois'),
+                    ChargesSection(
+                      entries: entries,
+                      fixedExpenses: fixedExpenses,
+                      fuelEntries: fuelEntries,
+                      isElectric: isElectric,
+                      onAddFixedExpense: onAddFixedExpense,
+                      onDeleteFixedExpense: onDeleteFixedExpense,
+                      onAddFuelEntry: onAddFuelEntry,
+                      onDeleteFuelEntry: onDeleteFuelEntry,
+                    ),
                     const SectionTitle('Export'),
                     ExportSection(entries: entries),
                     const SectionTitle('Courses'),

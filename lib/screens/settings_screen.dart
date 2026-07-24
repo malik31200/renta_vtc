@@ -176,6 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
             valueColor: AppColors.textPrimary,
             numeric: false,
             expandInput: true,
+            textAlign: TextAlign.left,
           ),
           ToggleField(
             icon: Icons.ev_station_outlined,

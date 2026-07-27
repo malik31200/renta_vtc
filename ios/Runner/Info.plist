@@ -29,6 +29,10 @@
 	<string>ca-app-pub-3858509501102713~3019419690</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- L'app n'utilise que le chiffrement standard OS (HTTPS) — évite la
+	     question de conformité export à chaque build TestFlight/App Store. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -27,6 +27,11 @@
 	<!-- App ID du vrai compte AdMob — CLAUDE.md §10.5. -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3858509501102713~3019419690</string>
+	<!-- Requis dès qu'AdMob/Google UMP peut demander l'autorisation de
+	     tracking (App Tracking Transparency) — sans cette clé, iOS tue
+	     l'app au démarrage au lieu d'afficher la demande. -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Cette autorisation permet d'afficher des publicités plus pertinentes. Tu peux refuser sans impact sur le fonctionnement de l'app.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<!-- L'app n'utilise que le chiffrement standard OS (HTTPS) — évite la

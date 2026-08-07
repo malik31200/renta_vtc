@@ -62,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   void _calculate() {
+    // Ferme le clavier numérique — retour testeur (Android et review Apple)
+    // : sans ça, il reste ouvert après le calcul.
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final result = _calculator.computeRide(
       profile: widget.profile,
       rideKm: NumberParsing.parse(_rideKmController.text),

@@ -291,6 +291,7 @@ class _RootShellState extends State<RootShell> {
 
   /// Tap sur la barre du bas — anime le PageView vers l'onglet choisi.
   void _onTabTap(int index) {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (index == 0 && !_activeProfile.isConfigured) {
       _goToTab(1);
       return;
@@ -305,7 +306,14 @@ class _RootShellState extends State<RootShell> {
 
   /// Swipe horizontal sur le PageView — CLAUDE.md n'impose pas ce geste,
   /// ajouté en confort d'usage en plus des taps sur la barre du bas.
+  ///
+  /// Ferme systématiquement le clavier au changement d'onglet : un champ
+  /// resté focus après un swipe garde le clavier ouvert indéfiniment (le
+  /// framework ne le referme jamais tout seul quand le champ n'est plus
+  /// visible, seulement quand il perd explicitement le focus) — retour
+  /// testeur, remonté aussi par la review Apple.
   void _onPageChanged(int index) {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (index == 0 && !_activeProfile.isConfigured) {
       // Le profil doit être configuré avant d'accéder au calcul : on ne
       // laisse pas le swipe atterrir sur Course, on renvoie vers Réglages.
@@ -331,7 +339,13 @@ class _RootShellState extends State<RootShell> {
     // toute la largeur d'un écran de bureau (aperçu web uniquement).
     return Scaffold(
       backgroundColor: const Color(0xFF0A0B0D),
-      body: Center(
+      // Taper en dehors d'un champ de saisie ferme le clavier — les champs
+      // eux-mêmes gèrent leur propre tap (LabeledField), qui prend le
+      // dessus sur celui-ci dans l'arène de gestes Flutter.
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
           child: ColoredBox(
@@ -398,6 +412,7 @@ class _RootShellState extends State<RootShell> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

@@ -1,9 +1,26 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/app_theme.dart';
 import '../widgets/app_top_bar.dart';
+
+// Liens fonctionnels vers la politique de confidentialité et les CGU,
+// requis dans le parcours d'achat lui-même pour les abonnements
+// auto-renouvelables (App Review Guideline 3.1.2(c)), pas seulement dans
+// les métadonnées App Store / Play Store.
+const _privacyPolicyUrl = 'https://malik31200.github.io/renta_vtc/privacy-policy.html';
+const _termsOfUseUrl = 'https://malik31200.github.io/renta_vtc/terms-of-use.html';
+
+Future<void> _openLink(String url) => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+
+/// Durée de l'abonnement en toutes lettres, à partir de son ID produit —
+/// `renta_vtc_premium_monthly` / `renta_vtc_premium_annual` sur les deux stores.
+String _subscriptionLength(String productId) {
+  if (productId.contains('annual')) return 'Durée : 1 an, renouvellement automatique';
+  return 'Durée : 1 mois, renouvellement automatique';
+}
 
 /// Écran affiché à la place de l'Historique tant que l'utilisateur n'est
 /// pas Premium — CLAUDE.md §10.1 : le calcul ponctuel (écran Course) ne
@@ -104,6 +121,26 @@ class PaywallScreen extends StatelessWidget {
             child: const Text('Restaurer mes achats', style: TextStyle(color: AppColors.textMuted)),
           ),
         ),
+        // Liens obligatoires dans le parcours d'achat lui-même — pas
+        // seulement dans les métadonnées des stores (§3.1.2(c) Apple).
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => _openLink(_termsOfUseUrl),
+                child: const Text('Conditions d\'utilisation', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+              ),
+              const Text('·', style: TextStyle(color: AppColors.textMuted)),
+              TextButton(
+                onPressed: () => _openLink(_privacyPolicyUrl),
+                child: const Text('Politique de confidentialité', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -142,6 +179,13 @@ class _PlanTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(product.description, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    const SizedBox(height: 2),
+                    // Durée de l'abonnement affichée explicitement, requis par
+                    // Apple en plus du titre/prix (§3.1.2(c)).
+                    Text(
+                      _subscriptionLength(product.id),
+                      style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontStyle: FontStyle.italic),
+                    ),
                   ],
                 ),
               ),

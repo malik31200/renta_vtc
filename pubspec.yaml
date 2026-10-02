@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.4+10
+version: 1.1.4+11
 
 environment:
   sdk: ^3.12.2
@@ -48,6 +48,10 @@ dependencies:
   # depuis l'écran d'abonnement — exigé par Apple pour les apps avec
   # abonnements auto-renouvelables (App Review Guideline 3.1.2(c)).
   url_launcher: ^6.3.1
+  # Demande d'autorisation App Tracking Transparency avant toute requête
+  # AdMob sur iOS — exigé par Apple (App Review Guideline 2.1, rejet du
+  # 25/08/2026) : UMP seul n'affiche pas la demande ATT.
+  app_tracking_transparency: ^2.0.7
 
 dev_dependencies:
   flutter_test:

@@ -81,8 +81,13 @@ class _RootShellState extends State<RootShell> {
     super.initState();
     _loadInitialData();
     _purchaseSubscription = _subscriptionService.purchaseStream.listen(_onPurchaseUpdates);
-    _notificationService.init();
-    _adsService.init();
+    // Séquentiel après la 1re frame : iOS n'affiche qu'une alerte système à
+    // la fois et ignore la demande ATT si celle des notifications est déjà
+    // à l'écran (rejet App Review du 25/08/2026).
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _adsService.init();
+      await _notificationService.init();
+    });
     _subscriptionService.queryProducts().then((products) {
       if (mounted) setState(() => _products = products);
     });

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -21,6 +22,7 @@ class AdsService {
     if (!isSupportedOnThisPlatform) return;
     try {
       await _requestConsent();
+      await _requestTrackingAuthorization();
       await MobileAds.instance.initialize();
     } catch (_) {
       // Échec silencieux (pas de réseau, SDK indisponible…) : la bannière
@@ -44,6 +46,18 @@ class AdsService {
       },
     );
     return completer.future;
+  }
+
+  /// Demande ATT (iOS uniquement), après le formulaire UMP et avant
+  /// l'init AdMob, pour qu'aucune donnée de tracking ne soit collectée
+  /// avant la réponse de l'utilisateur. Le léger délai laisse l'app passer
+  /// à l'état actif : sinon iOS ignore la demande sans rien afficher.
+  Future<void> _requestTrackingAuthorization() async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) return;
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status != TrackingStatus.notDetermined) return;
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    await AppTrackingTransparency.requestTrackingAuthorization();
   }
 
   Future<void> _loadAndShowConsentFormIfRequired() {

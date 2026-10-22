@@ -9,6 +9,35 @@ la plateforme ne reflète ni l'un ni l'autre.
 backend. Voir [`CLAUDE.md`](./CLAUDE.md) pour la spécification complète (logique métier,
 design system, écrans, modèle de monétisation).
 
+## Aperçu
+
+<table>
+  <tr>
+    <td width="25%"><img src="docs/screenshots/calcul.jpg" width="100%" alt="Écran Course : net estimé avec détail carburant, URSSAF et commission" /></td>
+    <td width="25%"><img src="docs/screenshots/saisie.jpg" width="100%" alt="Saisie d'une course : distance, prix client, montant versé, durée et plateforme" /></td>
+    <td width="25%"><img src="docs/screenshots/reglages.jpg" width="100%" alt="Réglages : profil véhicule, consommation, prix carburant et taux URSSAF" /></td>
+    <td width="25%"><img src="docs/screenshots/statistiques.jpg" width="100%" alt="Statistiques : net par km, net par heure, totaux et comparatif par plateforme" /></td>
+  </tr>
+  <tr>
+    <td width="25%" align="center">Net réel d'une course</td>
+    <td width="25%" align="center">Saisie de la course</td>
+    <td width="25%" align="center">Profil véhicule et URSSAF</td>
+    <td width="25%" align="center">Statistiques et plateformes</td>
+  </tr>
+  <tr>
+    <td width="25%"><img src="docs/screenshots/charges.jpg" width="100%" alt="Charges du mois : net réel après carburant et charges fixes" /></td>
+    <td width="25%"><img src="docs/screenshots/historique.jpg" width="100%" alt="Historique des courses et export CSV du trimestre" /></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+  </tr>
+  <tr>
+    <td width="25%" align="center">Charges du mois</td>
+    <td width="25%" align="center">Historique et export CSV</td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+  </tr>
+</table>
+
 ## Stack
 
 - **Flutter** (Dart) — Android, iOS, web
